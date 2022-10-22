@@ -77,7 +77,7 @@ db.posts.insertMany([
   },
   {
     title: 'Post Three',
-    description: 'This is a Special Post'
+    description: 'This is a Special Post',
     body: 'Body of post three',
     category: 'News',
     date: Date()
@@ -87,7 +87,7 @@ db.posts.insertMany([
     body: 'Body of post three',
     category: 'Entertainment',
     date: Date()
-  }
+  },
   {
     title: 'Post Five',
     body: 'Body of post Five',
@@ -124,7 +124,7 @@ db.posts.find({$or:[{ category: 'News' }, {category: 'Technology'}]})
 ## Find Using Quotes
 
 ```
-db.posts.find({ "user.status": 'author' })
+db.posts.find({ "user.name": 'John Doe' })
 ```
 
 ## Sort Rows
@@ -140,14 +140,23 @@ db.posts.find().sort({ title: -1 }).pretty()
 
 ```
 db.posts.find().count()
-db.posts.find({ category: 'news' }).count()
+db.posts.find({ category: 'News' }).count()
 ```
 
 ## Limit Rows
 
+### From top
+
 ```
 db.posts.find().limit(2).pretty()
 ```
+
+### From bottom
+
+```
+db.posts.find().sort({_id: -1}).limit(2)
+```
+
 
 ## Chaining
 
@@ -176,7 +185,7 @@ db.posts.find().forEach(doc => {
 db.posts.findOne({ category: 'News' })
 ```
 
-## Find Specific Fields
+## Find Specific Fields (inclusion)
 
 ```
 db.posts.find({ title: 'Post One' }, {
@@ -185,10 +194,16 @@ db.posts.find({ title: 'Post One' }, {
 })
 ```
 
+## Find Specific Fields (exclusion)
+
+```
+db.posts.find({title:"Post One" }, {title: 1, category: 1})
+```
+
 ## Update Row
 
 ```
-db.posts.update({ title: 'Post Two' },
+db.posts.updateOne({ title: 'Post Two' },
 {
   title: 'Post Two',
   body: 'New body for post 2',
@@ -199,7 +214,7 @@ db.posts.update({ title: 'Post Two' },
 ## Update Specific Field
 
 ```
-db.posts.update({ title: 'Post Two' },
+db.posts.updateOne({ title: 'Post Two' },
 {
   $set: {
     body: 'Body for post 2',
@@ -222,7 +237,7 @@ db.posts.updateMany({ category: 'News' },
 ## Increment Field (\$inc)
 
 ```
-db.posts.update({ title: 'Post Two' },
+db.posts.updateOne({ title: 'Post Two' },
 {
   $inc: {
     likes: 5
@@ -244,7 +259,7 @@ db.posts.updateMany({ category: 'News' },
 ## Update Row and add it if not exists
 
 ```
-db.posts.update({ title: 'Post Six' },
+db.posts.updateOne({ title: 'Post Six' },
 {
   title: 'Post Six',
   body: 'New body for post 6',
@@ -258,7 +273,7 @@ db.posts.update({ title: 'Post Six' },
 ## Rename Field
 
 ```
-db.posts.update({ title: 'Post Two' },
+db.posts.updateOne({ title: 'Post Two' },
 {
   $rename: {
     likes: 'views'
@@ -269,13 +284,13 @@ db.posts.update({ title: 'Post Two' },
 ## Delete Row
 
 ```
-db.posts.remove({ title: 'Post Four' })
+db.posts.deleteOne({ title: 'Post Four' })
 ```
 
 ## Sub-Documents
 
 ```
-db.posts.update({ title: 'Post One' },
+db.posts.updateOne({ title: 'Post One' },
 {
   $set: {
     comments: [
